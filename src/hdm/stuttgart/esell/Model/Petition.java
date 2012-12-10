@@ -149,8 +149,41 @@ public class Petition extends Persistence {
 		}
 	}
 
+	
+	//Updatet den Datensatz mit aktuellen Werten des Objekts
 	public void update() {
-		// ToDo
+		
+		makeConnection();
+    	PreparedStatement preparedStatement = null;
+    	
+        if(conn != null)
+        {
+            try {
+            	//Statement vorbereiten
+                String sql = "UPDATE petitions SET user_id = ?, title = ?, description = ?, price = ?, category_id = ?, amount = ?, image_url = ?, state = ?, created = ? WHERE id = ?";
+                preparedStatement = conn.prepareStatement(sql);
+                preparedStatement.setInt(1, this.userID);
+                preparedStatement.setString(2, this.title);
+                preparedStatement.setString(3, this.description);
+                preparedStatement.setInt(4, this.price);
+                preparedStatement.setInt(5, this.categoryID);
+                preparedStatement.setInt(6, this.amount);
+                preparedStatement.setString(7, this.imageURL.toString());
+                preparedStatement.setString(8, this.state);
+                preparedStatement.setDate(9, this.created);
+                
+                preparedStatement.setInt(10, this.id);
+                
+                //System.out.println(preparedStatement);
+                
+                //Statement absetzen
+                preparedStatement.execute();
+
+            } catch (SQLException e) {
+            	// ToDo
+                e.printStackTrace();
+            }
+        }
 	}
 
 	public void delete() {

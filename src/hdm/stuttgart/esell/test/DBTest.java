@@ -1,5 +1,6 @@
 package hdm.stuttgart.esell.test;
 
+import java.net.URL;
 import java.util.ArrayList;
 import hdm.stuttgart.esell.Model.*;
 import hdm.stuttgart.esell.Model.Petition.State;
@@ -13,9 +14,9 @@ public class DBTest {
 	public static void main(String[] args){
 
 
-		User user = new User(1);
-		user.setFirstname("Berthold");
-		user.update();
+//		User user = new User(1);
+//		user.setFirstname("Andreas");
+//		user.update();
 		
 //		PetitionList p = new PetitionList(1, "created", 0, 10);
 //		System.out.println(p.getJson());
@@ -34,7 +35,11 @@ public class DBTest {
 //		System.out.println(petition.getID());	
 //		System.out.println(petition.getJson());
 		
-		//Petition p = new Petition(2);
+		Petition p = new Petition(2);
+		p.setAmount(50);
+		p.setPrice(100);
+		p.setDescription("Garbage");
+		p.update();
 		//System.out.println(p.getJson());
 		
 		
