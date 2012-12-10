@@ -21,6 +21,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `esell`.`users` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `username` VARCHAR(50) NOT NULL ,
   `firstname` VARCHAR(50) NOT NULL ,
   `lastname` VARCHAR(50) NOT NULL ,
   `email` VARCHAR(50) NOT NULL ,
@@ -39,8 +40,8 @@ CREATE  TABLE IF NOT EXISTS `esell`.`petitions` (
   `category_id` INT(11) NOT NULL ,
   `title` VARCHAR(100) NOT NULL ,
   `description` VARCHAR(300) NULL DEFAULT NULL ,
-  `price` VARCHAR(45) NULL DEFAULT NULL ,
-  `amount` INT(11) NULL DEFAULT '1' ,
+  `price` INT(11) NULL DEFAULT NULL ,
+  `amount` INT(11) NOT NULL DEFAULT '1' ,
   `image_url` VARCHAR(160) NULL DEFAULT NULL ,
   `state` SET('Searching','Finished') NOT NULL ,
   `created` DATETIME NOT NULL ,
