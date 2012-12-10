@@ -151,7 +151,7 @@ public class Petition extends Persistence {
 
 	
 	//Updatet den Datensatz mit aktuellen Werten des Objekts
-	public void update() {
+	public boolean update() {
 		
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -178,17 +178,22 @@ public class Petition extends Persistence {
                 //System.out.println(preparedStatement);
                 
                 //Statement absetzen
-                preparedStatement.execute();
+                int affectedRows = preparedStatement.executeUpdate();
+                
+                if(affectedRows > 0) return true;
+                else return false;	
 
             } catch (SQLException e) {
             	// ToDo
-                e.printStackTrace();
+                //e.printStackTrace();
+            	return false;
             }
         }
+        return false;
 	}
 
 	//Petition-Datensatz lšschen
-	public void delete()
+	public boolean delete()
 	{
 		
 		makeConnection();
@@ -201,14 +206,20 @@ public class Petition extends Persistence {
                 String sql = "DELETE FROM petitions WHERE id = ?";
                 preparedStatement = conn.prepareStatement(sql);
                 preparedStatement.setInt(1, this.id);
+                
                 //Statement absetzen
-                preparedStatement.execute();
+                int affectedRows = preparedStatement.executeUpdate();
+                
+                if(affectedRows > 0) return true;
+                else return false;	
 
             } catch (SQLException e) {
             	// ToDo
-                e.printStackTrace();
+                //e.printStackTrace();
+            	return false;
             }
         }
+        return false;
 	}
 
 	

@@ -17,7 +17,7 @@ public class DBTest {
 
 //		User user = new User(1);
 //		user.setFirstname("Andreas");
-//		user.update();
+//		System.out.println(user.delete());
 		
 //		PetitionList p = new PetitionList(1, "created", 0, 10);
 //		System.out.println(p.getJson());
@@ -36,18 +36,18 @@ public class DBTest {
 //		System.out.println(petition.getID());	
 //		System.out.println(petition.getJson());
 		
-		Petition p = new Petition(7);
-		p.setAmount(50);
-		p.setPrice(100);
-		p.setDescription("Garbage");
-		try {
-			p.setImageURL(new URL("http://www.online.de"));
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		p.update();
-		p.delete();
+		Petition p = new Petition(3);
+//		p.setAmount(50);
+//		p.setPrice(100);
+//		p.setDescription("Garbage");
+//		try {
+//			p.setImageURL(new URL("http://www.online.de"));
+//		} catch (MalformedURLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		p.update();
+		System.out.println(p.delete());
 		//System.out.println(p.getJson());
 		
 		

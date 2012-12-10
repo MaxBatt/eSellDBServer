@@ -114,10 +114,10 @@ public class User extends Persistence{
 	
 	//update()
 	//Datensatz für User updaten
-	public void update()
+	public boolean update()
 	{
 		if (id == null) // User wurde noch nicht mit der DB abgeglichen.
-			return;
+			return false;
 		
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -136,21 +136,25 @@ public class User extends Persistence{
                 preparedStatement.setInt(6, id);
                 
                 //Statement absetzen
-                preparedStatement.execute();
+                int affectedRows = preparedStatement.executeUpdate();
+                
+                if(affectedRows > 0) return true;
+                else return false;	
 
             } catch (SQLException e) {
             	// ToDo
                 e.printStackTrace();
             }
         }
+        return false;
 	}
 	
 	
 	//User-Datensatz löschen
-	public void delete()
+	public boolean delete()
 	{
 		if (id == null) // User wurde noch nicht mit der DB abgeglichen.
-			return;
+			return false;
 		
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -162,14 +166,19 @@ public class User extends Persistence{
                 String sql = "DELETE FROM users WHERE id = ?";
                 preparedStatement = conn.prepareStatement(sql);
                 preparedStatement.setInt(1, id);
+
                 //Statement absetzen
-                preparedStatement.execute();
+                int affectedRows = preparedStatement.executeUpdate();
+                
+                if(affectedRows > 0) return true;
+                else return false;	
 
             } catch (SQLException e) {
-            	// ToDo
-                e.printStackTrace();
+            	return false;
+                //e.printStackTrace();
             }
         }
+        return false;
 	}
 	
 	//Prüfen, ob Benutzername und Emailadresse noch frei sind
