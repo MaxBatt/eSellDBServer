@@ -21,8 +21,8 @@ public class DBTest {
 //		user.update();
 		
 		
-		Petition petition = new Petition(1, "Blabla", 1, 1, "Searching");
-		petition.insert();
+//		Petition petition = new Petition(1, "Blabla", 1, 1, "Searching");
+//		petition.insert();
 //		System.out.println(petition.getID());	
 //		System.out.println(petition.getJson());
 		
@@ -41,13 +41,11 @@ public class DBTest {
 //		CategoryList list = new CategoryList();
 //		System.out.println(list.getJson());
 		
-//		PetitionList list = new PetitionList("created",0,10);
-//		System.out.println(list.getJson());
+		PetitionList list = new PetitionList(1, "created",0,10);
+		System.out.println(list.getJson());
 		
 		
-//		Petition pet = Petition.getPetition(1);
-		
-//		System.out.println(user.getID());
+
 	}
 
 }

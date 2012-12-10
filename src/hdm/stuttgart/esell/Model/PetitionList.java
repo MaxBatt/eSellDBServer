@@ -45,6 +45,39 @@ public class PetitionList extends Persistence{
         }
 	}
 	
+	//Konstruktor
+	//Gibt die PetitionList eines bestimmten Users zurück
+	//Empfängt als Parameter UserID,  Sortierung, Start-Zeile und Limit
+	public PetitionList(int userID, String order, int start, int limit){
+		
+		makeConnection();
+    	PreparedStatement preparedStatement = null;
+    	
+        if(conn != null)
+        {
+            try {
+            	//Statement vorbereiten
+                String sql = "SELECT * from petitions WHERE user_id = " + userID + " ORDER BY " + order + " LIMIT " + start + ", " + limit;
+                System.out.println(sql);
+                preparedStatement = conn.prepareStatement(sql);
+                
+                //Statement absetzen
+                ResultSet result = preparedStatement.executeQuery();
+                
+                //Für jeden Datensatz ein Objekt anlegen und in die Liste packen
+                while(result.next())
+                {
+                	Petition petition = new Petition(result.getInt("id"));
+                	this.petitionList.add(petition);
+                }
+                
+            } catch (SQLException e) {
+            	// ToDo
+                e.printStackTrace();
+            }
+        }
+	}
+	
 	
 	//Json ausgeben
 	public String getJson(){
