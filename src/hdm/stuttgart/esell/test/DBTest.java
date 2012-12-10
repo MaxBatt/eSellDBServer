@@ -13,7 +13,11 @@ public class DBTest {
 	public static void main(String[] args){
 
 
-//		User user = User.getUser("beatmax@gmx.de", "max");
+		User user = new User(1);
+		PetitionList p = new PetitionList(1, "created", 0, 10);
+		System.out.println(p.getJson());
+		
+		
 //		User user = new User("sdf", "Lustich", "peter@lufdstich.de", "peter");
 //		user.insert();
 //		user.setFirstname("Peter");
@@ -41,8 +45,8 @@ public class DBTest {
 //		CategoryList list = new CategoryList();
 //		System.out.println(list.getJson());
 		
-		PetitionList list = new PetitionList(1, "created",0,10);
-		System.out.println(list.getJson());
+//		PetitionList list = new PetitionList(1, "created",0,10);
+//		System.out.println(list.getJson());
 		
 		
 

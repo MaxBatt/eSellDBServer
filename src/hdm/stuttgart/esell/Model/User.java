@@ -11,6 +11,7 @@ import com.mysql.jdbc.Statement;
 public class User extends Persistence{
 
 	private Integer id;
+	private String username;
 	private String firstname;
 	private String lastname;
 	private String email;
@@ -18,17 +19,18 @@ public class User extends Persistence{
 	
 	private ArrayList<Petition> petitions;
 
-	//Konstruktor
-	public User(String firstname, String lastname,String email, String password){
+	//Konstruktor zum neuen Anlegen eines Users in der DB
+	public User(String username, String firstname, String lastname,String email, String password){
+		setUsername(username);
 		setFirstname(firstname);
 		setLastname(lastname);
 		setEmailadress(email);
 		setPassword(password);
 	}
 	
-	//Ruft den Datensatz für eine gegebene UserID ab und mappt diesen auf ein Objekt
-	public static User getUser(int id)
-	{
+	//Konstruktor ueber id
+	//Ruft den Datensatz für eine gegebene UserID ab und mappt diesen auf das Objekt
+	public User(int id){
 		makeConnection();
     	PreparedStatement preparedStatement = null;
     	
@@ -39,22 +41,28 @@ public class User extends Persistence{
                 String sql = "SELECT * FROM users WHERE (id= ?)";
                 preparedStatement = conn.prepareStatement(sql);
                 preparedStatement.setInt(1, id);
+                
                 //Statement absetzen
                 ResultSet result = preparedStatement.executeQuery();
+                
                 //Objekt-Mapping
                 if(result.next())
                 {
-	                User user = new User(result.getString("firstname"), result.getString("lastname"), result.getString("email"), result.getString("password"));
-	                user.id = result.getInt("id");
-	                return user;
+	                this.id 		= result.getInt("id");
+	                this.username 	= result.getString("username");
+	                this.firstname 	= result.getString("firstname");
+	                this.lastname 	= result.getString("lastname");
+	                this.email 		= result.getString("email");
+	                this.password 	= result.getString("password");
                 }
             } catch (SQLException e) {
             	// ToDo
                 e.printStackTrace();
             }
         }
-		return null;
 	}
+	
+	
 	
 	//Legt für das aktuelle User-Objekt einen Datensatz an
 	public void insert()
@@ -189,17 +197,18 @@ public class User extends Persistence{
         return false;
 	}
 	
-	
-	
-	
-	
-	
-	
+		
 	
 	// Getter/Setter
 	
 	public int getID() {
 		return id;
+	}
+	public String getUsername() {
+		return this.username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	public String getFirstname() {
 		return firstname;

@@ -63,15 +63,16 @@ public class Petition extends Persistence {
                 //Objektmapping
                 if(result.next())
                 {
-	                this.id = result.getInt("id");
-	                this.userID = result.getInt("user_id");
-	                this.username = result.getString("username");
-	                this.categoryID = result.getInt("category_id");
-	                this.categoryTitle = result.getString("category_title");
-	                this.title = result.getString("title");
-	                this.description = result.getString("description");
-	                this.price = result.getInt("price");
-	                this.amount = result.getInt("amount");
+	                this.id 			= result.getInt("id");
+	                this.userID 		= result.getInt("user_id");
+	                this.username 		= result.getString("username");
+	                this.categoryID 	= result.getInt("category_id");
+	                this.categoryTitle 	= result.getString("category_title");
+	                this.title 			= result.getString("title");
+	                this.description 	= result.getString("description");
+	                this.price 			= result.getInt("price");
+	                this.amount 		= result.getInt("amount");
+	                
 	                if(result.getString("image_url") != null){
 	                	try {
 							this.imageURL = new URL(result.getString("image_url"));
@@ -80,8 +81,8 @@ public class Petition extends Persistence {
 							e.printStackTrace();
 						}
 	                }
-	                this.state = result.getString("state");
-	                this.created = (result.getDate("created"));
+	                this.state 			= result.getString("state");
+	                this.created 		= (result.getDate("created"));
                 }
             } catch (SQLException e) {
             	// ToDo
@@ -128,7 +129,7 @@ public class Petition extends Persistence {
 
 				preparedStatement.setString(8, getState());
 				preparedStatement.setDate(9, getCreation());
-				System.out.println(preparedStatement);
+				//System.out.println(preparedStatement);
 				//Statement absetzen
 				preparedStatement.execute();
 				

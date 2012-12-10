@@ -25,7 +25,6 @@ public class PetitionList extends Persistence{
             try {
             	//Statement vorbereiten
                 String sql = "SELECT * from petitions ORDER BY " + order + " LIMIT " + start + ", " + limit;
-                System.out.println(sql);
                 preparedStatement = conn.prepareStatement(sql);
                 
                 //Statement absetzen
@@ -58,7 +57,6 @@ public class PetitionList extends Persistence{
             try {
             	//Statement vorbereiten
                 String sql = "SELECT * from petitions WHERE user_id = " + userID + " ORDER BY " + order + " LIMIT " + start + ", " + limit;
-                System.out.println(sql);
                 preparedStatement = conn.prepareStatement(sql);
                 
                 //Statement absetzen
