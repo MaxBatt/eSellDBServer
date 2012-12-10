@@ -7,14 +7,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
+
 import com.mysql.jdbc.Statement;
 
 public class Petition extends Persistence {
 
 	private int id;
 	private int userID;
+	private String username;
 	private int categoryID;
-	private String categoryName;
+	private String categoryTitle;
 	private String title;
 	private String description;
 	private Integer price;
@@ -22,13 +25,13 @@ public class Petition extends Persistence {
 	private int amount;
 	private URL imageURL;
 	private String state;
-	private Date Creation;
+	private Date created;
 
 	
 	
 	//Konstruktor
-	public Petition(int userID, String title, int categoryID, int amount,
-			String state) {
+	//Dieser wird benutzt, um ein neues Objekt zu erzeugen und in der DB zu speichern
+	public Petition(int userID, String title, int categoryID, int amount, String state) {
 		setUserID(userID);
 		setTitle(title);
 		setCategoryID(categoryID);
@@ -36,11 +39,11 @@ public class Petition extends Persistence {
 		setState(state);
 		setCreation(new Date(new java.util.Date().getTime()));
 	}
-
 	
-	//Ruft den Datensatz für eine gegebene PetitionID ab und mappt diesen auf ein Objekt
-	public static Petition getPetition(int id)
-	{
+	//Konstruktor ueber id
+	//Ruft den Datensatz für eine gegebene PetitionID ab und mappt diesen auf das Objekt
+	public Petition(int id){
+		
 		makeConnection();
     	PreparedStatement preparedStatement = null;
     	
@@ -50,39 +53,44 @@ public class Petition extends Persistence {
             	
             	//Statement vorbereiten
             	//Statement läuft mit INNER JOIN, damit man den Kategorienamen gleich mitkriegt.
-                String sql = "SELECT p.id, p.user_id, p.category_id, p.title, p.description, p.price, p.amount, p.image_url, p.state, p.created, c.title as category_title FROM petitions p INNER JOIN categories c ON p.category_id = c.id AND p.id = ?";
-                
+                String sql = "SELECT p.id, p.user_id, u.username, p.category_id, p.title, p.description, p.price, p.amount, p.image_url, p.state, p.created, c.title as category_title FROM petitions p INNER JOIN categories c ON p.category_id = c.id AND p.id = ? INNER JOIN users u ON p.user_id = u.id";
                 preparedStatement = conn.prepareStatement(sql);
                 preparedStatement.setInt(1, id);
-                
+
                 //Statement absetzen
                 ResultSet result = preparedStatement.executeQuery();
 
                 //Objektmapping
                 if(result.next())
                 {
-	                Petition pet = new Petition (	result.getInt("user_id"),  result.getString("title"), result.getInt("category_id"), result.getInt("amount"), result.getString("state"));
-	                pet.id = result.getInt("id");
-	                pet.categoryName = result.getString("category_title");
-	                pet.description = result.getString("description");
+	                this.id = result.getInt("id");
+	                this.userID = result.getInt("user_id");
+	                this.username = result.getString("username");
+	                this.categoryID = result.getInt("category_id");
+	                this.categoryTitle = result.getString("category_title");
+	                this.title = result.getString("title");
+	                this.description = result.getString("description");
+	                this.price = result.getInt("price");
+	                this.amount = result.getInt("amount");
 	                if(result.getString("image_url") != null){
 	                	try {
-							pet.imageURL = new URL(result.getString("image_url"));
+							this.imageURL = new URL(result.getString("image_url"));
 						} catch (MalformedURLException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 	                }
-	                return pet;
+	                this.state = result.getString("state");
+	                this.created = (result.getDate("created"));
                 }
             } catch (SQLException e) {
             	// ToDo
                 e.printStackTrace();
             }
         }
-		return null;
 	}
 
+	
 	
 	public void insert() {
 		makeConnection();
@@ -120,7 +128,7 @@ public class Petition extends Persistence {
 
 				preparedStatement.setString(8, getState());
 				preparedStatement.setDate(9, getCreation());
-
+				System.out.println(preparedStatement);
 				//Statement absetzen
 				preparedStatement.execute();
 				
@@ -195,8 +203,8 @@ public class Petition extends Persistence {
 		this.categoryID = categoryID;
 	}
 	
-	public String getCategoryName() {
-		return categoryName;
+	public String getCategoryTitle() {
+		return categoryTitle;
 	}
 
 	
@@ -225,11 +233,11 @@ public class Petition extends Persistence {
 	}
 
 	public Date getCreation() {
-		return Creation;
+		return created;
 	}
 
-	public void setCreation(Date creation) {
-		Creation = creation;
+	public void setCreation(Date created) {
+		this.created = created;
 	}
 
 	public enum State {

@@ -25,6 +25,7 @@ public class PetitionList extends Persistence{
             try {
             	//Statement vorbereiten
                 String sql = "SELECT * from petitions ORDER BY " + order + " LIMIT " + start + ", " + limit;
+                System.out.println(sql);
                 preparedStatement = conn.prepareStatement(sql);
                 
                 //Statement absetzen
@@ -33,7 +34,7 @@ public class PetitionList extends Persistence{
                 //FŸr jeden Datensatz ein Objekt anlegen und in die Liste packen
                 while(result.next())
                 {
-                	Petition petition = Petition.getPetition(result.getInt("id"));
+                	Petition petition = new Petition(result.getInt("id"));
                 	this.petitionList.add(petition);
                 }
                 
