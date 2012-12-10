@@ -126,13 +126,14 @@ public class User extends Persistence{
         {
             try {
             	//Statement vorbereiten
-                String sql = "UPDATE users SET firstname = ?, lastname = ?, email = ?, password = ? WHERE id = ?";
+                String sql = "UPDATE users SET username = ?, firstname = ?, lastname = ?, email = ?, password = ? WHERE id = ?";
                 preparedStatement = conn.prepareStatement(sql);
-                preparedStatement.setString(1, getFirstname());
-                preparedStatement.setString(2, getLastname());
-                preparedStatement.setString(3, getEmailadress());
-                preparedStatement.setString(4, getPassword());
-                preparedStatement.setInt(5, id);
+                preparedStatement.setString(1, getUsername());
+                preparedStatement.setString(2, getFirstname());
+                preparedStatement.setString(3, getLastname());
+                preparedStatement.setString(4, getEmailadress());
+                preparedStatement.setString(5, getPassword());
+                preparedStatement.setInt(6, id);
                 
                 //Statement absetzen
                 preparedStatement.execute();

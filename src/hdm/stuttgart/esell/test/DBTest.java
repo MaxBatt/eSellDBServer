@@ -13,13 +13,16 @@ public class DBTest {
 	public static void main(String[] args){
 
 
-//		User user = new User(1);
+		User user = new User(1);
+		user.setFirstname("Berthold");
+		user.update();
+		
 //		PetitionList p = new PetitionList(1, "created", 0, 10);
 //		System.out.println(p.getJson());
 		
 		
-		User user = new User("PeterPan", "Peter", "Pan", "peter@pan.de", "pan");
-		user.insert();
+		//User user = new User("bruder", "Bruder", "Pan", "bruder@pan.de", "pan");
+		//user.insert();
 //		user.insert();
 //		user.setFirstname("Peter");
 //		user.setEmailadress("beatmax@gmx.de");
