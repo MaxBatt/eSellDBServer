@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import hdm.stuttgart.esell.Model.*;
 import hdm.stuttgart.esell.Model.Petition.State;
+import hdm.stuttgart.esell.errors.ErrorHandler;
 
 public class DBTest {
 
@@ -13,61 +14,154 @@ public class DBTest {
 	 * @throws SQLException 
 	 */
 	public static void main(String[] args){
-
-
-//		User user = new User(1);
-//		user.setFirstname("Andreas");
-//		System.out.println(user.delete());
 		
-//		PetitionList p = new PetitionList(1, "created", 0, 10);
-//		System.out.println(p.getJson());
+		/*
+		 * Neuen User anlegen
+		 * Params: username, firstname, lastname, email, password
+		 *
 		
+		//User in DB speichern
+		ErrorHandler e = user.insert();
+		System.out.println(e.getFlag());
+		System.out.println(e.getMessage());
+		System.out.println(e.getJson());
+		System.out.println(user.getJson());
 		
-		//User user = new User("bruder", "Bruder", "Pan", "bruder@pan.de", "pan");
-		//user.insert();
-//		user.insert();
-//		user.setFirstname("Peter");
-//		user.setEmailadress("beatmax@gmx.de");
-//		user.update();
-		
-		
-//		Petition petition = new Petition(1, "Blabla", 1, 1, "Searching");
-//		petition.insert();
-//		System.out.println(petition.getID());	
-//		System.out.println(petition.getJson());
-		
-		Petition p = new Petition(3);
-//		p.setAmount(50);
-//		p.setPrice(100);
-//		p.setDescription("Garbage");
-//		try {
-//			p.setImageURL(new URL("http://www.online.de"));
-//		} catch (MalformedURLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		p.update();
-		System.out.println(p.delete());
-		//System.out.println(p.getJson());
+		*/
 		
 		
 		
-//		user.delete();
-		
-//		boolean bla1 = User.isEmailadressFree("hans@wurst.de");
-//		boolean bla2 = User.isEmailadressFree("hans@wurst2.de");
-		
-//		Category.insert("Dreck");
-		
-//		CategoryList list = new CategoryList();
-//		System.out.println(list.getJson());
-		
-//		PetitionList list = new PetitionList(1, "created",0,10);
-//		System.out.println(list.getJson());
 		
 		
-
+		/*
+		 * User updaten
+		 * Param: userID
+		 * 
+		/*
+		
+		User user = new User(1);
+		user.setUsername("Thomas");
+		user.setEmail("thomas@online.de");
+		ErrorHandler e = user.update();
+		System.out.println(e.getFlag());
+		System.out.println(e.getMessage());
+		System.out.println(e.getJson());
+		System.out.println(user.getJson());
+		
+		*/
+		
+		
+		
+		
+		
+		/*
+		 * User lšschen
+		 * Param: userID
+		 * 
+		 *
+		
+		User user = new User(1);
+		ErrorHandler e = user.delete();
+		System.out.println(e.getFlag());
+		System.out.println(e.getMessage());
+		System.out.println(e.getJson());
+		
+		*/
+		
+		
+		
+		
+		
+		/*
+		 * Neues Kaufgesuch anlegen
+		 * Params: userID, title, categoryID, amount, state
+		 *
+		 
+		Petition pet = new Petition(1, "MyPetition", 1, 2, "Searching");
+		
+		//User in DB speichern
+		ErrorHandler e = pet.insert();
+		System.out.println(e.getFlag());
+		System.out.println(e.getMessage());
+		System.out.println(e.getJson());
+		System.out.println(pet.getJson());
+		
+		*/	
+		
+		
+		
+		
+		
+		/*
+		 * Kaufgesuch updaten
+		 * Param: petitionID
+		 * 
+		 *
+		
+		Petition pet= new Petition(1);
+		pet.setTitle("My Updated Petition");
+		pet.setDescription("a little description...");
+		ErrorHandler e = pet.update();
+		System.out.println(e.getFlag());
+		System.out.println(e.getMessage());
+		System.out.println(e.getJson());
+		System.out.println(pet.getJson());
+		
+		*/
+		
+		
+		
+		
+		
+		/*
+		 * Kaufgesuch lšschen
+		 * Param: petitionID
+		 * 
+		 *
+		
+		Petition pet= new Petition(2);
+		ErrorHandler e = pet.delete();
+		System.out.println(e.getFlag());
+		System.out.println(e.getMessage());
+		System.out.println(e.getJson());
+		
+		*/
+		
+		
+		
+		
+		
+		/*
+		 * Liste aller Kaufgesuche
+		 * Params: order, start, limit
+		 * 
+		 *
+		
+		PetitionList plist= new PetitionList("created", 0,10);
+		System.out.println(plist.getJson());
+		
+		*/
+		
+		
+		
+		
+		
+		/*
+		 * Liste aller Kaufgesuche eines bestimmten Users
+		 * Param: userID, order, start, limit
+		 * 
+		 *
+		
+		PetitionList plist= new PetitionList(1, "created", 0,10);
+		System.out.println(plist.getJson());
+		
+		*/
+		
+		
+		
 	}
+	
+	
 
 }
 

@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import com.mysql.jdbc.Statement;
+import hdm.stuttgart.esell.errors.*;
+import hdm.stuttgart.esell.errors.ErrorHandler;
 
 
 public class User extends Persistence{
@@ -24,7 +26,7 @@ public class User extends Persistence{
 		setUsername(username);
 		setFirstname(firstname);
 		setLastname(lastname);
-		setEmailadress(email);
+		setEmail(email);
 		setPassword(password);
 	}
 	
@@ -65,13 +67,12 @@ public class User extends Persistence{
 	
 	
 	//Legt für das aktuelle User-Objekt einen Datensatz an
-	public void insert()
+	public ErrorHandler insert()
 	{
 		//Prüfen, ob Email schon vorhanden ist
 		if(!isUserFree(this.email, this.username)){
 			//TODO
-			System.out.println("Email-Adresse oder Benutzername schon vorhanden");
-			return;
+			return new ErrorHandler(false, "USR_EXISTS");
 		}
 		
 		makeConnection();
@@ -92,7 +93,7 @@ public class User extends Persistence{
                 preparedStatement.setString(4, getEmailadress());
                 preparedStatement.setString(5, getPassword());
                 
-                System.out.println(preparedStatement);
+                //System.out.println(preparedStatement);
                 //Statement absetzen
                 preparedStatement.execute();
                 
@@ -101,23 +102,26 @@ public class User extends Persistence{
                 res = preparedStatement.getGeneratedKeys();
                 if (res.next()) {
                     this.id = res.getInt(1);
+                    return new ErrorHandler(true, "USR_SAVED");
                 } else {
-                    throw new SQLException("Creating user failed, no generated key obtained.");
+                	return new ErrorHandler(false, "INSERT_ERR");
                 }
                 
             } catch (SQLException e) {
             	// ToDo
-                e.printStackTrace();
+                //e.printStackTrace();
+            	 return new ErrorHandler(false, "DB_ERR");
             }
         }
+        return new ErrorHandler(false, "DB_ERR");
 	}
 	
 	//update()
 	//Datensatz für User updaten
-	public boolean update()
+	public ErrorHandler update()
 	{
 		if (id == null) // User wurde noch nicht mit der DB abgeglichen.
-			return false;
+        	return new ErrorHandler(false, "NO_ENTRY_ERR");
 		
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -138,23 +142,27 @@ public class User extends Persistence{
                 //Statement absetzen
                 int affectedRows = preparedStatement.executeUpdate();
                 
-                if(affectedRows > 0) return true;
-                else return false;	
+                if(affectedRows > 0) 
+                	return new ErrorHandler(true, "USR_UPDATED");
+                else 
+                	return new ErrorHandler(false, "UPDATE_ERR");
 
             } catch (SQLException e) {
             	// ToDo
-                e.printStackTrace();
+                //e.printStackTrace();
+            	return new ErrorHandler(false, "DB_ERR");
+
             }
         }
-        return false;
+    	return new ErrorHandler(true, "DB_ERR");
 	}
 	
 	
 	//User-Datensatz löschen
-	public boolean delete()
+	public ErrorHandler delete()
 	{
 		if (id == null) // User wurde noch nicht mit der DB abgeglichen.
-			return false;
+	    	return new ErrorHandler(false, "NO_ENTRY_ERR");
 		
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -170,16 +178,19 @@ public class User extends Persistence{
                 //Statement absetzen
                 int affectedRows = preparedStatement.executeUpdate();
                 
-                if(affectedRows > 0) return true;
-                else return false;	
+                if(affectedRows > 0) 
+                	return new ErrorHandler(true, "USR_DELETED");
+                else 
+                	return new ErrorHandler(false, "DELETE_ERR");
 
             } catch (SQLException e) {
-            	return false;
+            	return new ErrorHandler(false, "USR_HAS_PET_ERR");
                 //e.printStackTrace();
             }
         }
-        return false;
+    	return new ErrorHandler(false, "DB_ERR");
 	}
+	
 	
 	//Prüfen, ob Benutzername und Emailadresse noch frei sind
 	public static boolean isUserFree(String email, String username)
@@ -238,7 +249,7 @@ public class User extends Persistence{
 	public String getEmailadress() {
 		return email;
 	}
-	public void setEmailadress(String email) {
+	public void setEmail(String email) {
 		this.email = email;
 	}
 	public String getPassword() {
