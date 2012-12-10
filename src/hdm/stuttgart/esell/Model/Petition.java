@@ -168,7 +168,8 @@ public class Petition extends Persistence {
                 preparedStatement.setInt(4, this.price);
                 preparedStatement.setInt(5, this.categoryID);
                 preparedStatement.setInt(6, this.amount);
-                preparedStatement.setString(7, this.imageURL.toString());
+                if (this.imageURL != null) preparedStatement.setString(7, this.imageURL.toString());
+                else preparedStatement.setString(7, null);
                 preparedStatement.setString(8, this.state);
                 preparedStatement.setDate(9, this.created);
                 
@@ -186,8 +187,28 @@ public class Petition extends Persistence {
         }
 	}
 
-	public void delete() {
-		// ToDo
+	//Petition-Datensatz lšschen
+	public void delete()
+	{
+		
+		makeConnection();
+    	PreparedStatement preparedStatement = null;
+    	
+        if(conn != null)
+        {
+            try {
+            	//Statement vorbereiten
+                String sql = "DELETE FROM petitions WHERE id = ?";
+                preparedStatement = conn.prepareStatement(sql);
+                preparedStatement.setInt(1, this.id);
+                //Statement absetzen
+                preparedStatement.execute();
+
+            } catch (SQLException e) {
+            	// ToDo
+                e.printStackTrace();
+            }
+        }
 	}
 
 	

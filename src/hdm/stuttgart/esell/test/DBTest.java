@@ -1,5 +1,6 @@
 package hdm.stuttgart.esell.test;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import hdm.stuttgart.esell.Model.*;
@@ -35,11 +36,18 @@ public class DBTest {
 //		System.out.println(petition.getID());	
 //		System.out.println(petition.getJson());
 		
-		Petition p = new Petition(2);
+		Petition p = new Petition(7);
 		p.setAmount(50);
 		p.setPrice(100);
 		p.setDescription("Garbage");
+		try {
+			p.setImageURL(new URL("http://www.online.de"));
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		p.update();
+		p.delete();
 		//System.out.println(p.getJson());
 		
 		
