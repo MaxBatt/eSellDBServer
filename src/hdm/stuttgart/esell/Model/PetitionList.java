@@ -44,6 +44,8 @@ public class PetitionList extends Persistence{
         }
 	}
 	
+	
+	
 	//Konstruktor
 	//Gibt die PetitionList eines bestimmten Users zurück
 	//Empfängt als Parameter UserID,  Sortierung, Start-Zeile und Limit
@@ -75,6 +77,8 @@ public class PetitionList extends Persistence{
             }
         }
 	}
+	
+	
 	
 	
 	//Json ausgeben

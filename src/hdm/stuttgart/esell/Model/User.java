@@ -68,9 +68,9 @@ public class User extends Persistence{
 	public void insert()
 	{
 		//Prüfen, ob Email schon vorhanden ist
-		if(!isEmailadressFree(this.email)){
+		if(!isUserFree(this.email, this.username)){
 			//TODO
-			System.out.println("Email-Adresse schon vorhanden");
+			System.out.println("Email-Adresse oder Benutzername schon vorhanden");
 			return;
 		}
 		
@@ -82,15 +82,17 @@ public class User extends Persistence{
         {
             try {
             	//Statement vorbereiten
-                String sql = "INSERT INTO users(firstname, lastname, email, password) VALUES(?, ?, ?, ?)";
+                String sql = "INSERT INTO users(username, firstname, lastname, email, password) VALUES(?, ?, ?, ?, ?)";
                 
                 preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); // Der 2. Parameter ist wichtig,damit man die InsertID sofort zurück erhält 
                 
-                preparedStatement.setString(1, getFirstname());
-                preparedStatement.setString(2, getLastname());
-                preparedStatement.setString(3, getEmailadress());
-                preparedStatement.setString(4, getPassword());
+                preparedStatement.setString(1, getUsername());
+                preparedStatement.setString(2, getFirstname());
+                preparedStatement.setString(3, getLastname());
+                preparedStatement.setString(4, getEmailadress());
+                preparedStatement.setString(5, getPassword());
                 
+                System.out.println(preparedStatement);
                 //Statement absetzen
                 preparedStatement.execute();
                 
@@ -169,8 +171,8 @@ public class User extends Persistence{
         }
 	}
 	
-	//Prüfen, ob Emailadresse noch frei ist
-	public static boolean isEmailadressFree(String emailAdress)
+	//Prüfen, ob Benutzername und Emailadresse noch frei sind
+	public static boolean isUserFree(String email, String username)
 	{
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -179,9 +181,10 @@ public class User extends Persistence{
         {
             try {
             	//Statement vorbereiten
-                String sql = "SELECT * FROM users WHERE email = ?";
+                String sql = "SELECT * FROM users WHERE email = ? OR username = ?";
                 preparedStatement = conn.prepareStatement(sql);
-                preparedStatement.setString(1, emailAdress);
+                preparedStatement.setString(1, email);
+                preparedStatement.setString(2, username);
                 
                 //Statement absetzen
                 ResultSet result = preparedStatement.executeQuery();
