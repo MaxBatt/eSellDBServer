@@ -33,6 +33,7 @@ public class User extends Persistence{
 	//Konstruktor ueber id
 	//Ruft den Datensatz fŸr eine gegebene UserID ab und mappt diesen auf das Objekt
 	public User(int id){
+		// TODO fliegt raus!
 		makeConnection();
     	PreparedStatement preparedStatement = null;
     	
