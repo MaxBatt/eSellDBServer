@@ -32,38 +32,38 @@ public class User extends Persistence{
 	
 	//Konstruktor ueber id
 	//Ruft den Datensatz für eine gegebene UserID ab und mappt diesen auf das Objekt
-	public User(int id){
-		// TODO fliegt raus!
-		makeConnection();
-    	PreparedStatement preparedStatement = null;
-    	
-        if(conn != null)
-        {
-            try {
-            	//SQL Statement vorbereiten
-                String sql = "SELECT * FROM users WHERE (id= ?)";
-                preparedStatement = conn.prepareStatement(sql);
-                preparedStatement.setInt(1, id);
-                
-                //Statement absetzen
-                ResultSet result = preparedStatement.executeQuery();
-                
-                //Objekt-Mapping
-                if(result.next())
-                {
-	                this.id 		= result.getInt("id");
-	                this.username 	= result.getString("username");
-	                this.firstname 	= result.getString("firstname");
-	                this.lastname 	= result.getString("lastname");
-	                this.email 		= result.getString("email");
-	                this.password 	= result.getString("password");
-                }
-            } catch (SQLException e) {
-            	// ToDo
-                e.printStackTrace();
-            }
-        }
-	}
+//	public User(int id){
+//		// TODO fliegt raus!
+//		makeConnection();
+//    	PreparedStatement preparedStatement = null;
+//    	
+//        if(conn != null)
+//        {
+//            try {
+//            	//SQL Statement vorbereiten
+//                String sql = "SELECT * FROM users WHERE (id= ?)";
+//                preparedStatement = conn.prepareStatement(sql);
+//                preparedStatement.setInt(1, id);
+//                
+//                //Statement absetzen
+//                ResultSet result = preparedStatement.executeQuery();
+//                
+//                //Objekt-Mapping
+//                if(result.next())
+//                {
+//	                this.id 		= result.getInt("id");
+//	                this.username 	= result.getString("username");
+//	                this.firstname 	= result.getString("firstname");
+//	                this.lastname 	= result.getString("lastname");
+//	                this.email 		= result.getString("email");
+//	                this.password 	= result.getString("password");
+//                }
+//            } catch (SQLException e) {
+//            	// ToDo
+//                e.printStackTrace();
+//            }
+//        }
+//	}
 	
 	
 	
