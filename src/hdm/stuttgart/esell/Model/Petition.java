@@ -31,8 +31,7 @@ public class Petition extends Persistence {
 	// Konstruktor
 	// Dieser wird benutzt, um ein neues Objekt zu erzeugen und in der DB zu
 	// speichern
-	public Petition(int userID, String title, int categoryID, int amount,
-			String state) {
+	public Petition(int userID, String title, int categoryID, int amount, String state) {
 		setUserID(userID);
 		setTitle(title);
 		setCategoryID(categoryID);
@@ -41,10 +40,10 @@ public class Petition extends Persistence {
 		setCreation(new Date(new java.util.Date().getTime()));
 	}
 
-	// Konstruktor ueber id
+
 	// Ruft den Datensatz für eine gegebene PetitionID ab und mappt diesen auf
-	// das Objekt
-	public Petition(int id) {
+	// ein Objekt
+	public static Petition getPetition(int id) throws ErrorHandler {
 
 		makeConnection();
 		PreparedStatement preparedStatement = null;
@@ -64,33 +63,43 @@ public class Petition extends Persistence {
 
 				// Objektmapping
 				if (result.next()) {
-					this.id = result.getInt("id");
-					this.userID = result.getInt("user_id");
-					this.username = result.getString("username");
-					this.categoryID = result.getInt("category_id");
-					this.categoryTitle = result.getString("category_title");
-					this.title = result.getString("title");
-					this.description = result.getString("description");
-					this.price = result.getInt("price");
-					this.amount = result.getInt("amount");
+					
+					Petition petition = new Petition(result.getInt("user_id"),
+							result.getString("title"),
+							result.getInt("category_id"), 
+							result.getInt("amount"), 
+							result.getString("state"));
+					
+					petition.id = result.getInt("id");
+					petition.username = result.getString("username");
+					petition.categoryTitle = result.getString("category_title");
+					petition.description = result.getString("description");
+					petition.price = result.getInt("price");
 
 					if (result.getString("image_url") != null) {
 						try {
-							this.imageURL = new URL(
+							petition.imageURL = new URL(
 									result.getString("image_url"));
 						} catch (MalformedURLException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
-					this.state = result.getString("state");
-					this.created = (result.getDate("created"));
+					
+					petition.created = (result.getDate("created"));
+					
+					return petition;
 				}
+				else
+					throw new ErrorHandler(ErrorHandler.ErrorCode.NO_ENTRY_ERR);
 			} catch (SQLException e) {
 				// ToDo
 				e.printStackTrace();
+				throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 			}
 		}
+		else
+			throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 	}
 
 	public void insert() throws ErrorHandler 

@@ -15,9 +15,15 @@ public class PetitionList extends Persistence{
 	private ArrayList<Petition> petitionList = new ArrayList<Petition>();
 	
 	//Konstruktor
+	private PetitionList(ArrayList<Petition> petitionList)
+	{
+		this.petitionList = petitionList;
+	}
+	
+	
 	//Empfängt als Parameter Sortierung, Start-Zeile und Limit
 	//für order einfach den Namen des jeweiligen Tabellenfelds benutzen
-	public PetitionList(String order, int start, int limit) throws ErrorHandler{
+	public static PetitionList getPetitionList(String order, int start, int limit) throws ErrorHandler{
 		
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -32,12 +38,16 @@ public class PetitionList extends Persistence{
                 //Statement absetzen
                 ResultSet result = preparedStatement.executeQuery();
                 
+                ArrayList<Petition> petitionList = new ArrayList<Petition>();
+                
                 //Für jeden Datensatz ein Objekt anlegen und in die Liste packen
                 while(result.next())
                 {
-                	Petition petition = new Petition(result.getInt("id"));
-                	this.petitionList.add(petition);
+                	Petition petition = Petition.getPetition(result.getInt("id"));
+                	petitionList.add(petition);
                 }
+                
+                return new PetitionList(petitionList);
                 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -50,10 +60,9 @@ public class PetitionList extends Persistence{
 	
 	
 	
-	//Konstruktor
 	//Gibt die PetitionList eines bestimmten Users zurück
 	//Empfängt als Parameter UserID,  Sortierung, Start-Zeile und Limit
-	public PetitionList(int userID, String order, int start, int limit) throws ErrorHandler{
+	public static PetitionList getPetitionListByUser(int userID, String order, int start, int limit) throws ErrorHandler{
 		
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -68,13 +77,16 @@ public class PetitionList extends Persistence{
                 //Statement absetzen
                 ResultSet result = preparedStatement.executeQuery();
                 
+                ArrayList<Petition> petitionList = new ArrayList<Petition>();
+                
                 //Für jeden Datensatz ein Objekt anlegen und in die Liste packen
                 while(result.next())
                 {
-                	Petition petition = new Petition(result.getInt("id"));
-                	this.petitionList.add(petition);
+                	Petition petition = Petition.getPetition(result.getInt("id"));
+                	petitionList.add(petition);
                 }
                 
+                return new PetitionList(petitionList);
             } catch (SQLException e) {
                 e.printStackTrace();
                 throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);

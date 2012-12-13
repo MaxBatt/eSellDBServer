@@ -15,7 +15,14 @@ public class CategoryList extends Persistence{
 	private ArrayList<Category> categoryList = new ArrayList<Category>();
 	
 	//Konstruktor
-	public CategoryList() throws ErrorHandler{	
+	private CategoryList(ArrayList<Category> categoryList)
+	{
+		this.categoryList = categoryList;
+	}
+	
+	
+	public static CategoryList getCategoryList() throws ErrorHandler{	
+		ArrayList<Category> categoryList = new ArrayList<Category>();
 		
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -33,11 +40,13 @@ public class CategoryList extends Persistence{
                 //FŸr jeden Datensatz ein Objekt anlegen und in die Liste packen
                 while(result.next())
                 {
+                	// TODO hier dürfte die ID eigentlich nicht gesetzt werden können.
                 	Category cat = new Category(result.getString("title"));
                 	cat.setID(result.getInt("id"));
-                	this.categoryList.add(cat);
+                	categoryList.add(cat);
                 }
                 
+                return new CategoryList(categoryList);
             } catch (SQLException e) {
             	// ToDo
                 e.printStackTrace();
