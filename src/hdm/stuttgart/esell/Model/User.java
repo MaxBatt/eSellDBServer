@@ -70,6 +70,47 @@ public class User extends Persistence{
         	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 	}
 	
+	public static User getUserByLogin(String username, String password) throws ErrorHandler
+	{
+		makeConnection();
+    	PreparedStatement preparedStatement = null;
+    	
+        if(conn != null)
+        {
+            try {
+            	//SQL Statement vorbereiten
+                String sql = "SELECT * FROM users WHERE (username= ? AND password = ?)";
+                preparedStatement = conn.prepareStatement(sql);
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, password);
+                
+                //Statement absetzen
+                ResultSet result = preparedStatement.executeQuery();
+                
+                //Objekt-Mapping
+                if(result.next())
+                {
+                	User user = new User(result.getString("username"), 
+                			result.getString("firstname"), 
+                			result.getString("lastname"), 
+                			result.getString("email"), 
+                			result.getString("password"));
+                	
+                	user.id = result.getInt("id");
+
+                	return user;
+                }
+                else
+                	throw new ErrorHandler(ErrorHandler.ErrorCode.NO_ENTRY_ERR);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+            }
+        }
+        else
+        	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+	
+	}
 	
 	
 	//Legt für das aktuelle User-Objekt einen Datensatz an
