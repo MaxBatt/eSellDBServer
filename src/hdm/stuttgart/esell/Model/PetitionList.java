@@ -1,6 +1,8 @@
 package hdm.stuttgart.esell.Model;
 
 
+import hdm.stuttgart.esell.errors.ErrorHandler;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +17,7 @@ public class PetitionList extends Persistence{
 	//Konstruktor
 	//Empfängt als Parameter Sortierung, Start-Zeile und Limit
 	//für order einfach den Namen des jeweiligen Tabellenfelds benutzen
-	public PetitionList(String order, int start, int limit){
+	public PetitionList(String order, int start, int limit) throws ErrorHandler{
 		
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -38,10 +40,12 @@ public class PetitionList extends Persistence{
                 }
                 
             } catch (SQLException e) {
-            	// ToDo
                 e.printStackTrace();
+                throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
             }
         }
+        else
+        	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 	}
 	
 	
@@ -49,7 +53,7 @@ public class PetitionList extends Persistence{
 	//Konstruktor
 	//Gibt die PetitionList eines bestimmten Users zurück
 	//Empfängt als Parameter UserID,  Sortierung, Start-Zeile und Limit
-	public PetitionList(int userID, String order, int start, int limit){
+	public PetitionList(int userID, String order, int start, int limit) throws ErrorHandler{
 		
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -72,10 +76,12 @@ public class PetitionList extends Persistence{
                 }
                 
             } catch (SQLException e) {
-            	// ToDo
                 e.printStackTrace();
+                throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
             }
         }
+        else
+        	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 	}
 	
 	

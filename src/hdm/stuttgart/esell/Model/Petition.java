@@ -9,7 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.text.SimpleDateFormat;
 
 import com.mysql.jdbc.Statement;
 
@@ -94,7 +93,8 @@ public class Petition extends Persistence {
 		}
 	}
 
-	public ErrorHandler insert() {
+	public void insert() throws ErrorHandler 
+	{
 		makeConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet res;
@@ -141,25 +141,26 @@ public class Petition extends Persistence {
 				res = preparedStatement.getGeneratedKeys();
 				if (res.next()) {
 					this.id = res.getInt(1);
-					return new ErrorHandler(true, "PET_SAVED");
+					return;
 				} else {
-					return new ErrorHandler(false, "INSERT_ERR");
+					throw new ErrorHandler(ErrorHandler.ErrorCode.INSERT_ERR);
 				}
 
 			} catch (SQLException e) {
 				// ToDo
 				// e.printStackTrace();
-				return new ErrorHandler(false, "DB_ERR");
+				throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 			}
 		}
-		return new ErrorHandler(false, "DB_ERR");
+		else	
+			throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 	}
 
 	// Updatet den Datensatz mit aktuellen Werten des Objekts
-	public ErrorHandler update() {
+	public void update() throws ErrorHandler {
 
 		if (id == null) // Petition wurde noch nicht mit der DB abgeglichen.
-        	return new ErrorHandler(false, "NO_ENTRY_ERR");
+			throw new ErrorHandler(ErrorHandler.ErrorCode.NO_ENTRY_ERR);
 		
 		makeConnection();
 		PreparedStatement preparedStatement = null;
@@ -190,26 +191,26 @@ public class Petition extends Persistence {
 				int affectedRows = preparedStatement.executeUpdate();
 
 				if (affectedRows > 0)
-					return new ErrorHandler(true, "PET_UPDATED");
+					return;
 				else
-					return new ErrorHandler(false, "UPDATE_ERR");
+					throw new ErrorHandler(ErrorHandler.ErrorCode.UPDATE_ERR);
 
 			} catch (SQLException e) {
 				// ToDo
 				// e.printStackTrace();
-				return new ErrorHandler(false, "DB_ERR");
+				throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 			}
 		}
-		return new ErrorHandler(false, "DB_ERR");
+		throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 	
 	
 	}
 
 	// Petition-Datensatz lšschen
-	public ErrorHandler delete() {
+	public void delete() throws ErrorHandler {
 
 		if (id == null) // Petition wurde noch nicht mit der DB abgeglichen.
-        	return new ErrorHandler(false, "NO_ENTRY_ERR");
+			throw new ErrorHandler(ErrorHandler.ErrorCode.NO_ENTRY_ERR);
 			
 		makeConnection();
 		PreparedStatement preparedStatement = null;
@@ -225,17 +226,17 @@ public class Petition extends Persistence {
 				int affectedRows = preparedStatement.executeUpdate();
 
 				if (affectedRows > 0)
-					 return new ErrorHandler(true, "PET_DELETED");
+					 return;
 				else
-					return new ErrorHandler(false, "DELETE_ERR");
+					throw new ErrorHandler(ErrorHandler.ErrorCode.DELETE_ERR);
 
 			} catch (SQLException e) {
 				// ToDo
 				// e.printStackTrace();
-				return new ErrorHandler(false, "DB_ERR");
+				throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 			}
 		}
-		return new ErrorHandler(false, "DB_ERR");
+		throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 	}
 
 	
@@ -248,6 +249,10 @@ public class Petition extends Persistence {
 
 	public int getUserID() {
 		return userID;
+	}
+	
+	public String getUsername() {
+		return username;
 	}
 
 	public void setUserID(int applicant) {

@@ -1,6 +1,8 @@
 package hdm.stuttgart.esell.Model;
 
 
+import hdm.stuttgart.esell.errors.ErrorHandler;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +15,7 @@ public class CategoryList extends Persistence{
 	private ArrayList<Category> categoryList = new ArrayList<Category>();
 	
 	//Konstruktor
-	public CategoryList(){	
+	public CategoryList() throws ErrorHandler{	
 		
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -39,8 +41,11 @@ public class CategoryList extends Persistence{
             } catch (SQLException e) {
             	// ToDo
                 e.printStackTrace();
+                throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
             }
         }
+        else
+        	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 	}
 	
 	public String getJson(){

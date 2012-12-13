@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import com.mysql.jdbc.Statement;
-import hdm.stuttgart.esell.errors.*;
 import hdm.stuttgart.esell.errors.ErrorHandler;
 
 
@@ -68,12 +67,11 @@ public class User extends Persistence{
 	
 	
 	//Legt für das aktuelle User-Objekt einen Datensatz an
-	public ErrorHandler insert()
+	public void insert() throws ErrorHandler
 	{
 		//Prüfen, ob Email schon vorhanden ist
 		if(!isUserFree(this.email, this.username)){
-			//TODO
-			return new ErrorHandler(false, "USR_EXISTS");
+			throw new ErrorHandler(ErrorHandler.ErrorCode.USR_EXISTS);
 		}
 		
 		makeConnection();
@@ -101,28 +99,34 @@ public class User extends Persistence{
                 //InsertID ermitteln
                 //Die Methode ist effizienter als nochmal eine Abfrage auszuführen :)
                 res = preparedStatement.getGeneratedKeys();
-                if (res.next()) {
+                if (res.next()) 
+                {
                     this.id = res.getInt(1);
-                    return new ErrorHandler(true, "USR_SAVED");
-                } else {
-                	return new ErrorHandler(false, "INSERT_ERR");
+                    return;
+                } 
+                else 
+                {
+        			throw new ErrorHandler(ErrorHandler.ErrorCode.INSERT_ERR);
                 }
-                
-            } catch (SQLException e) {
-            	// ToDo
-                //e.printStackTrace();
-            	 return new ErrorHandler(false, "DB_ERR");
+            } 
+            catch (SQLException SQLe) 
+            {
+            	//e.printStackTrace();
+    			throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
             }
         }
-        return new ErrorHandler(false, "DB_ERR");
+        else
+        	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 	}
 	
 	//update()
 	//Datensatz für User updaten
-	public ErrorHandler update()
+	public void update() throws ErrorHandler
 	{
 		if (id == null) // User wurde noch nicht mit der DB abgeglichen.
-        	return new ErrorHandler(false, "NO_ENTRY_ERR");
+		{
+			throw new ErrorHandler(ErrorHandler.ErrorCode.NO_ENTRY_ERR);
+		}
 		
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -144,26 +148,27 @@ public class User extends Persistence{
                 int affectedRows = preparedStatement.executeUpdate();
                 
                 if(affectedRows > 0) 
-                	return new ErrorHandler(true, "USR_UPDATED");
+                	return;
                 else 
-                	return new ErrorHandler(false, "UPDATE_ERR");
+                {
+        			throw new ErrorHandler(ErrorHandler.ErrorCode.UPDATE_ERR);
+                }
 
             } catch (SQLException e) {
-            	// ToDo
                 //e.printStackTrace();
-            	return new ErrorHandler(false, "DB_ERR");
-
+            	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
             }
         }
-    	return new ErrorHandler(true, "DB_ERR");
+        else
+        	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 	}
 	
 	
 	//User-Datensatz löschen
-	public ErrorHandler delete()
+	public void delete() throws ErrorHandler
 	{
 		if (id == null) // User wurde noch nicht mit der DB abgeglichen.
-	    	return new ErrorHandler(false, "NO_ENTRY_ERR");
+			throw new ErrorHandler(ErrorHandler.ErrorCode.NO_ENTRY_ERR);
 		
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -180,21 +185,22 @@ public class User extends Persistence{
                 int affectedRows = preparedStatement.executeUpdate();
                 
                 if(affectedRows > 0) 
-                	return new ErrorHandler(true, "USR_DELETED");
+                	return;
                 else 
-                	return new ErrorHandler(false, "DELETE_ERR");
+                	throw new ErrorHandler(ErrorHandler.ErrorCode.DELETE_ERR);
 
             } catch (SQLException e) {
-            	return new ErrorHandler(false, "USR_HAS_PET_ERR");
+            	throw new ErrorHandler(ErrorHandler.ErrorCode.USR_HAS_PET_ERR);
                 //e.printStackTrace();
             }
         }
-    	return new ErrorHandler(false, "DB_ERR");
+        else
+        	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 	}
 	
 	
 	//Prüfen, ob Benutzername und Emailadresse noch frei sind
-	public static boolean isUserFree(String email, String username)
+	public static boolean isUserFree(String email, String username) throws ErrorHandler
 	{
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -213,13 +219,12 @@ public class User extends Persistence{
                 return !result.next();
                 	
             } catch (SQLException e) {
-            	// ToDo
                 e.printStackTrace();
+                throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
             }
         }
-        
-     // temp 
-        return false;
+        else
+        	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 	}
 	
 		
