@@ -157,7 +157,7 @@ public class Petition extends Persistence {
 
 			} catch (SQLException e) {
 				// ToDo
-				// e.printStackTrace();
+				e.printStackTrace();
 				throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
 			}
 		}

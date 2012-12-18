@@ -19,15 +19,23 @@ public class DBTest {
 		 * Neuen User anlegen
 		 * Params: username, firstname, lastname, email, password
 		 *
+		 */
 		
-		//User in DB speichern
-		ErrorHandler e = user.insert();
-		System.out.println(e.getFlag());
-		System.out.println(e.getMessage());
-		System.out.println(e.getJson());
-		System.out.println(user.getJson());
+//		User user = new User("Hansi12345", "Hans", "Wurst", "hans@wurst.de", "12345");
+//		
+//		
+//		//User in DB speichern
+//		try
+//		{
+//			user.insert();
+//		}
+//		catch(ErrorHandler e)
+//		{
+//			System.out.println(e.getMessage());
+//			System.out.println(user.getJson());
+//		}
 		
-		*/
+		
 		
 		
 		
@@ -37,18 +45,45 @@ public class DBTest {
 		 * User updaten
 		 * Param: userID
 		 * 
+		/*/
+		
+//		User user = null;
+//		try {
+//			user = User.getUserByID(2);
+//		} catch (ErrorHandler e) {
+//			System.out.println(e.getMessage());
+//		}
+//		
+//		user.setUsername("Thomas");
+//		user.setEmail("thomas@online.de");
+//
+//		try{
+//			user.update();
+//		}
+//		catch (ErrorHandler e) {
+//			System.out.println(e.getMessage());
+//			System.out.println(user.getJson());
+//		}
+		
+		
+		
 		/*
+		 * Username und Email überprüfen
+		 * Param: userID
+		 * 
+		/*/
 		
-		User user = new User(1);
-		user.setUsername("Thomas");
-		user.setEmail("thomas@online.de");
-		ErrorHandler e = user.update();
-		System.out.println(e.getFlag());
-		System.out.println(e.getMessage());
-		System.out.println(e.getJson());
-		System.out.println(user.getJson());
 		
-		*/
+//		try {
+//			if(User.isUserFree("hans@wurst.de", "Thomas"))
+//				System.out.println("User is free.");
+//			else
+//				System.out.println("User is NOT free.");
+//		} catch (ErrorHandler e) {
+//			System.out.println(e.getMessage());
+//		}
+		
+		
 		
 		
 		
@@ -58,15 +93,71 @@ public class DBTest {
 		 * User lšschen
 		 * Param: userID
 		 * 
-		 *
+		 */
 		
-		User user = new User(1);
-		ErrorHandler e = user.delete();
-		System.out.println(e.getFlag());
-		System.out.println(e.getMessage());
-		System.out.println(e.getJson());
+//		User user = null;
+//		try {
+//			user = User.getUserByLogin("hansi12345", "12345");
+//		} catch (ErrorHandler e) {
+//			System.out.println(e.getMessage());
+//		}
+//		
+//		try{
+//		user.delete();
+//		}
+//		catch( ErrorHandler e)
+//		{
+//			System.out.println(e.getMessage());
+//		}
 		
-		*/
+		
+		
+		
+		
+		
+		/*
+		 * Category hinzufügen
+		 * Param: title
+		 * 
+		 */
+		
+//		try {
+//			Category.insert("Sonstiges");
+//		} catch (ErrorHandler e) {
+//			System.out.println(e.getMessage());
+//		}
+		
+//		try {
+//			Category.insert("Auto");
+//		} catch (ErrorHandler e) {
+//			System.out.println(e.getMessage());
+//		}
+		
+		
+		
+		
+		
+		
+		
+		
+		/*
+		 * CategoryList abrufen
+		 * Param: -
+		 * 
+		 */
+		
+//		CategoryList list = null;
+//		try {
+//			list = CategoryList.getCategoryList();
+//		} catch (ErrorHandler e) {
+//			System.out.println(e.getMessage());
+//		}
+//		
+//		if (list != null)
+//			System.out.println(list.getJson());
+		
+		
+		
 		
 		
 		
@@ -75,18 +166,20 @@ public class DBTest {
 		/*
 		 * Neues Kaufgesuch anlegen
 		 * Params: userID, title, categoryID, amount, state
-		 *
+		 */
 		 
-		Petition pet = new Petition(1, "MyPetition", 1, 2, "Searching");
+//		Petition pet = new Petition(3, "MyPetition5", 1, 2, "Searching");
+//		
+//		//User in DB speichern
+//
+//		try{
+//			pet.insert();
+//		} catch (ErrorHandler e){
+//			System.out.println(e.getMessage());
+//			System.out.println(pet.getJson());
+//		}
 		
-		//User in DB speichern
-		ErrorHandler e = pet.insert();
-		System.out.println(e.getFlag());
-		System.out.println(e.getMessage());
-		System.out.println(e.getJson());
-		System.out.println(pet.getJson());
 		
-		*/	
 		
 		
 		
@@ -96,18 +189,17 @@ public class DBTest {
 		 * Kaufgesuch updaten
 		 * Param: petitionID
 		 * 
-		 *
+		 */
+//		try{
+//			Petition pet= Petition.getPetition(4);
+//			pet.setTitle("My Updated Petition");
+//			pet.setDescription("a little description...");
+//			pet.update();
+//		}catch (ErrorHandler e){
+//		System.out.println(e.getMessage());
+//		}
 		
-		Petition pet= new Petition(1);
-		pet.setTitle("My Updated Petition");
-		pet.setDescription("a little description...");
-		ErrorHandler e = pet.update();
-		System.out.println(e.getFlag());
-		System.out.println(e.getMessage());
-		System.out.println(e.getJson());
-		System.out.println(pet.getJson());
 		
-		*/
 		
 		
 		
@@ -117,15 +209,15 @@ public class DBTest {
 		 * Kaufgesuch lšschen
 		 * Param: petitionID
 		 * 
-		 *
+		 */
 		
-		Petition pet= new Petition(2);
-		ErrorHandler e = pet.delete();
-		System.out.println(e.getFlag());
-		System.out.println(e.getMessage());
-		System.out.println(e.getJson());
-		
-		*/
+//		try{
+//			Petition pet= Petition.getPetition(4);
+//			pet.delete();
+//		}catch (ErrorHandler e) {
+//			System.out.println(e.getMessage());
+//		}
+
 		
 		
 		
@@ -135,12 +227,17 @@ public class DBTest {
 		 * Liste aller Kaufgesuche
 		 * Params: order, start, limit
 		 * 
-		 *
+		 */
 		
-		PetitionList plist= new PetitionList("created", 0,10);
-		System.out.println(plist.getJson());
+//		PetitionList plist = null;
+//		try {
+//			plist = PetitionList.getPetitionList("created", 0,3);
+//		} catch (ErrorHandler e) {
+//			System.out.println(e.getMessage());
+//		}
+//		System.out.println(plist.getJson());
 		
-		*/
+		
 		
 		
 		
@@ -150,12 +247,37 @@ public class DBTest {
 		 * Liste aller Kaufgesuche eines bestimmten Users
 		 * Param: userID, order, start, limit
 		 * 
-		 *
+		 */
 		
-		PetitionList plist= new PetitionList(1, "created", 0,10);
-		System.out.println(plist.getJson());
+//		PetitionList plist = null;
+//		try {
+//			plist = PetitionList.getPetitionListByUser(3, "created", 0,1);
+//		} catch (ErrorHandler e) {
+//			System.out.println(e.getMessage());
+//		}
+//		
+//		System.out.println(plist.getJson());
 		
-		*/
+		
+		
+		
+		
+		
+		/*
+		 * Liste aller Kaufgesuche einer bestimmten Kategorie
+		 * Param: categoryID, order, start, limit
+		 * 
+		 */
+		
+//		PetitionList plist = null;
+//		try {
+//			plist = PetitionList.getPetitionListByCategory(1, "created", 1,2);
+//		} catch (ErrorHandler e) {
+//			System.out.println(e.getMessage());
+//		}
+//		
+//		System.out.println(plist.getJson());
+//		
 		
 		
 		
