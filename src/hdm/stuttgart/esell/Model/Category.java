@@ -1,9 +1,13 @@
 package hdm.stuttgart.esell.Model;
 
-import hdm.stuttgart.esell.errors.ErrorHandler;
+import hdm.stuttgart.esell.errors.ESellException;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import com.google.gson.Gson;
 
 public class Category extends Persistence{
 	
@@ -14,8 +18,14 @@ public class Category extends Persistence{
 		this.title = title;
 	}
 	
+	private Category(ResultSet result) throws SQLException
+	{
+		this.setTitle(result.getString("title"));
+		this.setID(result.getInt("id"));
+	}
 	
-	public static void insert(String title) throws ErrorHandler
+	
+	public static void insert(String title) throws ESellException
 	{
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -34,55 +44,50 @@ public class Category extends Persistence{
             } catch (SQLException e) {
             	// ToDo
                 e.printStackTrace();
-                throw new ErrorHandler(ErrorHandler.ErrorCode.INSERT_ERR);
+                throw new ESellException(ESellException.ErrorCode.INSERT_ERR);
             }
         }
         else
-        	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+        	throw new ESellException(ESellException.ErrorCode.DB_ERR);
 	}
 	
-	// TODO muss zunächst besprochen werden.
-//	public static ArrayList<Category> getCategoryList() throws ErrorHandler{	
-//		
-//		ArrayList<Category> categoryList = new ArrayList<Category>();
-//		
-//		makeConnection();
-//    	PreparedStatement preparedStatement = null;
-//    	
-//        if(conn != null)
-//        {
-//            try {
-//            	//Statement vorbereiten
-//                String sql = "SELECT * from categories";
-//                preparedStatement = conn.prepareStatement(sql);
-//                
-//                //Statement absetzen
-//                ResultSet result = preparedStatement.executeQuery();
-//                
-//                //FŸr jeden Datensatz ein Objekt anlegen und in die Liste packen
-//                while(result.next())
-//                {
-//                	Category cat = new Category(result.getString("title"));
-//                	cat.setID(result.getInt("id"));
-//                	categoryList.add(cat);
-//                }
-//                
-//                return categoryList;
-//                
-//            } catch (SQLException e) {
-//            	// ToDo
-//                e.printStackTrace();
-//                throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
-//            }
-//        }
-//        else
-//        	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
-//	}
 	
-//	public static void delete(int id)
-//	{
-//		//ToDo
-//	}
+	
+	public static CategoryList getCategoryList() throws ESellException{	
+		
+		ArrayList<Category> categoryList = new ArrayList<Category>();
+		
+		makeConnection();
+    	PreparedStatement preparedStatement = null;
+    	
+        if(conn != null)
+        {
+            try {
+            	//Statement vorbereiten
+                String sql = "SELECT * from categories";
+                preparedStatement = conn.prepareStatement(sql);
+                
+                //Statement absetzen
+                ResultSet result = preparedStatement.executeQuery();
+                
+                //FŸr jeden Datensatz ein Objekt anlegen und in die Liste packen
+                while(result.next())
+                {
+                	categoryList.add(new Category(result));
+                }
+                
+                return new CategoryList(categoryList);
+                
+            } catch (SQLException e) {
+            	// ToDo
+                e.printStackTrace();
+                throw new ESellException(ESellException.ErrorCode.DB_ERR);
+            }
+        }
+        else
+        	throw new ESellException(ESellException.ErrorCode.DB_ERR);
+	}
+	
 	
 	
 	
@@ -90,7 +95,7 @@ public class Category extends Persistence{
 	public int getID(){
 		return this.id;
 	}
-	public void setID(int id){
+	private void setID(int id){
 		this.id = id;
 	}
 	public String getTitle(){
@@ -99,5 +104,23 @@ public class Category extends Persistence{
 	public void setTitle(String title){
 		this.title = title;
 	}
+	
+	public static class CategoryList{
+		
+		private ArrayList<Category> categoryList = new ArrayList<Category>();
+		
+		//Konstruktor
+		private CategoryList(ArrayList<Category> categoryList)
+		{
+			this.categoryList = categoryList;
+		}
+		
+		public String getJson(){
+			Gson gson = new Gson();
+			String json = gson.toJson(this.categoryList);
+			return json; 
+		}
+	}
+
 	
 }

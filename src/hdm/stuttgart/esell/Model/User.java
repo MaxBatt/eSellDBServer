@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import com.mysql.jdbc.Statement;
-import hdm.stuttgart.esell.errors.ErrorHandler;
+import hdm.stuttgart.esell.errors.ESellException;
 
 
 public class User extends Persistence{
@@ -29,9 +29,18 @@ public class User extends Persistence{
 		setPassword(password);
 	}
 	
+	private User(ResultSet result) throws SQLException{
+		setID(result.getInt("id"));
+		setUsername(result.getString("username"));
+    	setFirstname(result.getString("firstname")); 
+    	setLastname(result.getString("lastname")); 
+    	setEmail(result.getString("email")); 
+    	setPassword(result.getString("password"));
+	}
+	
 
 	//Ruft den Datensatz für eine gegebene UserID ab und mappt diesen auf das Objekt
-	public static User getUserByID(int id) throws ErrorHandler{
+	public static User getUserByID(int id) throws ESellException{
 		makeConnection();
     	PreparedStatement preparedStatement = null;
     	
@@ -49,28 +58,20 @@ public class User extends Persistence{
                 //Objekt-Mapping
                 if(result.next())
                 {
-                	User user = new User(result.getString("username"), 
-                			result.getString("firstname"), 
-                			result.getString("lastname"), 
-                			result.getString("email"), 
-                			result.getString("password"));
-                	
-                	user.id = result.getInt("id");
-
-                	return user;
+                	return new User(result);
                 }
                 else
-                	throw new ErrorHandler(ErrorHandler.ErrorCode.NO_ENTRY_ERR);
+                	throw new ESellException(ESellException.ErrorCode.NO_ENTRY_ERR);
             } catch (SQLException e) {
                 e.printStackTrace();
-                throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+                throw new ESellException(ESellException.ErrorCode.DB_ERR);
             }
         }
         else
-        	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+        	throw new ESellException(ESellException.ErrorCode.DB_ERR);
 	}
 	
-	public static User getUserByLogin(String username, String password) throws ErrorHandler
+	public static User getUserByLogin(String username, String password) throws ESellException
 	{
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -90,35 +91,27 @@ public class User extends Persistence{
                 //Objekt-Mapping
                 if(result.next())
                 {
-                	User user = new User(result.getString("username"), 
-                			result.getString("firstname"), 
-                			result.getString("lastname"), 
-                			result.getString("email"), 
-                			result.getString("password"));
-                	
-                	user.id = result.getInt("id");
-
-                	return user;
+                	return new User(result);
                 }
                 else
-                	throw new ErrorHandler(ErrorHandler.ErrorCode.NO_ENTRY_ERR);
+                	throw new ESellException(ESellException.ErrorCode.NO_ENTRY_ERR);
             } catch (SQLException e) {
                 e.printStackTrace();
-                throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+                throw new ESellException(ESellException.ErrorCode.DB_ERR);
             }
         }
         else
-        	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+        	throw new ESellException(ESellException.ErrorCode.DB_ERR);
 	
 	}
 	
 	
 	//Legt für das aktuelle User-Objekt einen Datensatz an
-	public void insert() throws ErrorHandler
+	public void insert() throws ESellException
 	{
 		//Prüfen, ob Email schon vorhanden ist
 		if(!isUserFree(this.email, this.username)){
-			throw new ErrorHandler(ErrorHandler.ErrorCode.USR_EXISTS);
+			throw new ESellException(ESellException.ErrorCode.USR_EXISTS);
 		}
 		
 		makeConnection();
@@ -153,26 +146,26 @@ public class User extends Persistence{
                 } 
                 else 
                 {
-        			throw new ErrorHandler(ErrorHandler.ErrorCode.INSERT_ERR);
+        			throw new ESellException(ESellException.ErrorCode.INSERT_ERR);
                 }
             } 
             catch (SQLException SQLe) 
             {
             	//e.printStackTrace();
-    			throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+    			throw new ESellException(ESellException.ErrorCode.DB_ERR);
             }
         }
         else
-        	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+        	throw new ESellException(ESellException.ErrorCode.DB_ERR);
 	}
 	
 	//update()
 	//Datensatz für User updaten
-	public void update() throws ErrorHandler
+	public void update() throws ESellException
 	{
 		if (id == null) // User wurde noch nicht mit der DB abgeglichen.
 		{
-			throw new ErrorHandler(ErrorHandler.ErrorCode.NO_ENTRY_ERR);
+			throw new ESellException(ESellException.ErrorCode.NO_ENTRY_ERR);
 		}
 		
 		makeConnection();
@@ -198,24 +191,24 @@ public class User extends Persistence{
                 	return;
                 else 
                 {
-        			throw new ErrorHandler(ErrorHandler.ErrorCode.UPDATE_ERR);
+        			throw new ESellException(ESellException.ErrorCode.UPDATE_ERR);
                 }
 
             } catch (SQLException e) {
                 //e.printStackTrace();
-            	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+            	throw new ESellException(ESellException.ErrorCode.DB_ERR);
             }
         }
         else
-        	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+        	throw new ESellException(ESellException.ErrorCode.DB_ERR);
 	}
 	
 	
 	//User-Datensatz löschen
-	public void delete() throws ErrorHandler
+	public void delete() throws ESellException
 	{
 		if (id == null) // User wurde noch nicht mit der DB abgeglichen.
-			throw new ErrorHandler(ErrorHandler.ErrorCode.NO_ENTRY_ERR);
+			throw new ESellException(ESellException.ErrorCode.NO_ENTRY_ERR);
 		
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -234,20 +227,20 @@ public class User extends Persistence{
                 if(affectedRows > 0) 
                 	return;
                 else 
-                	throw new ErrorHandler(ErrorHandler.ErrorCode.DELETE_ERR);
+                	throw new ESellException(ESellException.ErrorCode.DELETE_ERR);
 
             } catch (SQLException e) {
-            	throw new ErrorHandler(ErrorHandler.ErrorCode.USR_HAS_PET_ERR);
+            	throw new ESellException(ESellException.ErrorCode.USR_HAS_PET_ERR);
                 //e.printStackTrace();
             }
         }
         else
-        	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+        	throw new ESellException(ESellException.ErrorCode.DB_ERR);
 	}
 	
 	
 	//Prüfen, ob Benutzername und Emailadresse noch frei sind
-	public static boolean isUserFree(String email, String username) throws ErrorHandler
+	public static boolean isUserFree(String email, String username) throws ESellException
 	{
 		makeConnection();
     	PreparedStatement preparedStatement = null;
@@ -267,11 +260,11 @@ public class User extends Persistence{
                 	
             } catch (SQLException e) {
                 e.printStackTrace();
-                throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+                throw new ESellException(ESellException.ErrorCode.DB_ERR);
             }
         }
         else
-        	throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+        	throw new ESellException(ESellException.ErrorCode.DB_ERR);
 	}
 	
 		
@@ -280,6 +273,9 @@ public class User extends Persistence{
 	
 	public int getID() {
 		return id;
+	}
+	private void setID(int id){
+		this.id = id;
 	}
 	public String getUsername() {
 		return this.username;

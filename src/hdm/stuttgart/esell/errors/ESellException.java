@@ -4,14 +4,14 @@ package hdm.stuttgart.esell.errors;
 import com.google.gson.Gson;
 
 /*
- * ErrorHandler
+ * ESellException
  * FŸhrt einen Katalog mit Fehler- und Erfolgsmeldungen und stellt ein Objekt mit den Feldern flag und message.
- * Je nach errorCode, mit dem instanziiert wird, wird flag auf true/false gesetzt und message mit 
+ * Je nach errorCode, mit dem instanziiert wird, wird die message mit 
  * der entsprechenden Fehlermeldung belegt. 
  * 
  */
 
-public class ErrorHandler extends Exception{
+public class ESellException extends Exception{
 
 	/**
 	 * 
@@ -30,7 +30,7 @@ public class ErrorHandler extends Exception{
 	 * Params: int flag, String errorCode
 	 * 
 	 */
-	public ErrorHandler(ErrorCode errorCode) {
+	public ESellException(ErrorCode errorCode) {
 		super(errorCode.message);
 		
 		this.errorCode = errorCode;

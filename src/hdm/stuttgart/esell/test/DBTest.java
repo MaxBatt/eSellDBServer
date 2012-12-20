@@ -4,8 +4,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import hdm.stuttgart.esell.Model.*;
+import hdm.stuttgart.esell.Model.Category.CategoryList;
+import hdm.stuttgart.esell.Model.Petition.PetitionList;
 import hdm.stuttgart.esell.Model.Petition.State;
-import hdm.stuttgart.esell.errors.ErrorHandler;
+import hdm.stuttgart.esell.errors.ESellException;
 
 public class DBTest {
 
@@ -49,7 +51,7 @@ public class DBTest {
 		
 //		User user = null;
 //		try {
-//			user = User.getUserByID(2);
+//			user = User.getUserByID(3);
 //		} catch (ErrorHandler e) {
 //			System.out.println(e.getMessage());
 //		}
@@ -148,7 +150,7 @@ public class DBTest {
 		
 //		CategoryList list = null;
 //		try {
-//			list = CategoryList.getCategoryList();
+//			list = Category.getCategoryList();
 //		} catch (ErrorHandler e) {
 //			System.out.println(e.getMessage());
 //		}
@@ -191,7 +193,7 @@ public class DBTest {
 		 * 
 		 */
 //		try{
-//			Petition pet= Petition.getPetition(4);
+//			Petition pet= Petition.getPetition(8);
 //			pet.setTitle("My Updated Petition");
 //			pet.setDescription("a little description...");
 //			pet.update();
@@ -231,7 +233,7 @@ public class DBTest {
 		
 //		PetitionList plist = null;
 //		try {
-//			plist = PetitionList.getPetitionList("created", 0,3);
+//			plist = Petition.getPetitionList("created", 0,3);
 //		} catch (ErrorHandler e) {
 //			System.out.println(e.getMessage());
 //		}

@@ -1,6 +1,6 @@
 package hdm.stuttgart.esell.Model;
 
-import hdm.stuttgart.esell.errors.ErrorHandler;
+import hdm.stuttgart.esell.errors.ESellException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -9,16 +9,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 
+import com.google.gson.Gson;
 import com.mysql.jdbc.Statement;
 
 public class Petition extends Persistence {
 
 	private Integer id;
 	private int userID;
-	private String username;
 	private int categoryID;
-	private String categoryTitle;
 	private String title;
 	private String description;
 	private Integer price;
@@ -39,11 +39,34 @@ public class Petition extends Persistence {
 		setState(state);
 		setCreation(new Date(new java.util.Date().getTime()));
 	}
+	
+	private Petition(ResultSet result) throws SQLException{
+		setUserID(result.getInt("user_id"));
+		setTitle(result.getString("title"));
+		setCategoryID(result.getInt("category_id")); 
+		setAmount(result.getInt("amount")); 
+		setState(result.getString("state"));
+		
+		setID(result.getInt("id"));
+		setDescription(result.getString("description"));
+		setPrice(result.getInt("price"));
+
+		if (result.getString("image_url") != null) {
+			try {
+				setImageURL( new URL(
+						result.getString("image_url")));
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		setCreation(result.getDate("created"));
+	}
 
 
 	// Ruft den Datensatz für eine gegebene PetitionID ab und mappt diesen auf
 	// ein Objekt
-	public static Petition getPetition(int id) throws ErrorHandler {
+	public static Petition getPetition(int id) throws ESellException {
 
 		makeConnection();
 		PreparedStatement preparedStatement = null;
@@ -54,7 +77,7 @@ public class Petition extends Persistence {
 				// Statement vorbereiten
 				// Statement läuft mit INNER JOIN, damit man den Kategorienamen
 				// gleich mitkriegt.
-				String sql = "SELECT p.id, p.user_id, u.username, p.category_id, p.title, p.description, p.price, p.amount, p.image_url, p.state, p.created, c.title as category_title FROM petitions p INNER JOIN categories c ON p.category_id = c.id AND p.id = ? INNER JOIN users u ON p.user_id = u.id";
+				String sql = "SELECT * FROM petitions WHERE (id=?)";
 				preparedStatement = conn.prepareStatement(sql);
 				preparedStatement.setInt(1, id);
 
@@ -64,45 +87,22 @@ public class Petition extends Persistence {
 				// Objektmapping
 				if (result.next()) {
 					
-					Petition petition = new Petition(result.getInt("user_id"),
-							result.getString("title"),
-							result.getInt("category_id"), 
-							result.getInt("amount"), 
-							result.getString("state"));
-					
-					petition.id = result.getInt("id");
-					petition.username = result.getString("username");
-					petition.categoryTitle = result.getString("category_title");
-					petition.description = result.getString("description");
-					petition.price = result.getInt("price");
-
-					if (result.getString("image_url") != null) {
-						try {
-							petition.imageURL = new URL(
-									result.getString("image_url"));
-						} catch (MalformedURLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-					
-					petition.created = (result.getDate("created"));
-					
-					return petition;
+					return new Petition(result);
+							
 				}
 				else
-					throw new ErrorHandler(ErrorHandler.ErrorCode.NO_ENTRY_ERR);
+					throw new ESellException(ESellException.ErrorCode.NO_ENTRY_ERR);
 			} catch (SQLException e) {
 				// ToDo
 				e.printStackTrace();
-				throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+				throw new ESellException(ESellException.ErrorCode.DB_ERR);
 			}
 		}
 		else
-			throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+			throw new ESellException(ESellException.ErrorCode.DB_ERR);
 	}
 
-	public void insert() throws ErrorHandler 
+	public void insert() throws ESellException 
 	{
 		makeConnection();
 		PreparedStatement preparedStatement = null;
@@ -152,24 +152,24 @@ public class Petition extends Persistence {
 					this.id = res.getInt(1);
 					return;
 				} else {
-					throw new ErrorHandler(ErrorHandler.ErrorCode.INSERT_ERR);
+					throw new ESellException(ESellException.ErrorCode.INSERT_ERR);
 				}
 
 			} catch (SQLException e) {
 				// ToDo
 				e.printStackTrace();
-				throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+				throw new ESellException(ESellException.ErrorCode.DB_ERR);
 			}
 		}
 		else	
-			throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+			throw new ESellException(ESellException.ErrorCode.DB_ERR);
 	}
 
 	// Updatet den Datensatz mit aktuellen Werten des Objekts
-	public void update() throws ErrorHandler {
+	public void update() throws ESellException {
 
 		if (id == null) // Petition wurde noch nicht mit der DB abgeglichen.
-			throw new ErrorHandler(ErrorHandler.ErrorCode.NO_ENTRY_ERR);
+			throw new ESellException(ESellException.ErrorCode.NO_ENTRY_ERR);
 		
 		makeConnection();
 		PreparedStatement preparedStatement = null;
@@ -202,24 +202,24 @@ public class Petition extends Persistence {
 				if (affectedRows > 0)
 					return;
 				else
-					throw new ErrorHandler(ErrorHandler.ErrorCode.UPDATE_ERR);
+					throw new ESellException(ESellException.ErrorCode.UPDATE_ERR);
 
 			} catch (SQLException e) {
 				// ToDo
 				// e.printStackTrace();
-				throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+				throw new ESellException(ESellException.ErrorCode.DB_ERR);
 			}
 		}
-		throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+		throw new ESellException(ESellException.ErrorCode.DB_ERR);
 	
 	
 	}
 
 	// Petition-Datensatz löschen
-	public void delete() throws ErrorHandler {
+	public void delete() throws ESellException {
 
 		if (id == null) // Petition wurde noch nicht mit der DB abgeglichen.
-			throw new ErrorHandler(ErrorHandler.ErrorCode.NO_ENTRY_ERR);
+			throw new ESellException(ESellException.ErrorCode.NO_ENTRY_ERR);
 			
 		makeConnection();
 		PreparedStatement preparedStatement = null;
@@ -237,31 +237,154 @@ public class Petition extends Persistence {
 				if (affectedRows > 0)
 					 return;
 				else
-					throw new ErrorHandler(ErrorHandler.ErrorCode.DELETE_ERR);
+					throw new ESellException(ESellException.ErrorCode.DELETE_ERR);
 
 			} catch (SQLException e) {
 				// ToDo
 				// e.printStackTrace();
-				throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+				throw new ESellException(ESellException.ErrorCode.DB_ERR);
 			}
 		}
-		throw new ErrorHandler(ErrorHandler.ErrorCode.DB_ERR);
+		throw new ESellException(ESellException.ErrorCode.DB_ERR);
 	}
 
 	
+	//Empfängt als Parameter Sortierung, Start-Zeile und Limit
+	//für order einfach den Namen des jeweiligen Tabellenfelds benutzen
+	public static PetitionList getPetitionList(String order, int start, int limit) throws ESellException{
+		makeConnection();
+    	PreparedStatement preparedStatement = null;
+    	
+        if(conn != null)
+        {
+            try {
+            	//Statement vorbereiten
+                String sql = "SELECT * from petitions ORDER BY ? LIMIT ?, ?";
+                preparedStatement = conn.prepareStatement(sql);
+                
+                preparedStatement.setString(1, order);
+                preparedStatement.setInt(2, start);
+                preparedStatement.setInt(3, limit);
+                
+                //Statement absetzen
+                ResultSet result = preparedStatement.executeQuery();
+                
+                ArrayList<Petition> petitionList = new ArrayList<Petition>();
+                
+                //Für jeden Datensatz ein Objekt anlegen und in die Liste packen
+                while(result.next())
+                {
+                	Petition petition = new Petition(result);
+                	petitionList.add(petition);
+                }
+                
+                return new PetitionList(petitionList);
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new ESellException(ESellException.ErrorCode.DB_ERR);
+            }
+        }
+        else
+        	throw new ESellException(ESellException.ErrorCode.DB_ERR);
+	}
+	
+	
+	//Gibt die PetitionList eines bestimmten Users zurück
+		//Empfängt als Parameter UserID,  Sortierung, Start-Zeile und Limit
+		public static PetitionList getPetitionListByUser(int userID, String order, int start, int limit) throws ESellException{
+			
+			makeConnection();
+	    	PreparedStatement preparedStatement = null;
+	    	
+	        if(conn != null)
+	        {
+	            try {
+	            	//Statement vorbereiten
+	                String sql = "SELECT * from petitions WHERE user_id = ? ORDER BY ? LIMIT ?, ?";
+	                preparedStatement = conn.prepareStatement(sql);
+	                
+	                preparedStatement.setInt(1, userID);
+	                preparedStatement.setString(2, order);
+	                preparedStatement.setInt(3, start);
+	                preparedStatement.setInt(4, limit);
+	                
+	                //Statement absetzen
+	                ResultSet result = preparedStatement.executeQuery();
+	                
+	                ArrayList<Petition> petitionList = new ArrayList<Petition>();
+	                
+	                //Für jeden Datensatz ein Objekt anlegen und in die Liste packen
+	                while(result.next())
+	                {
+	                	Petition petition = new Petition(result);
+	                	petitionList.add(petition);
+	                }
+	                
+	                return new PetitionList(petitionList);
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	                throw new ESellException(ESellException.ErrorCode.DB_ERR);
+	            }
+	        }
+	        else
+	        	throw new ESellException(ESellException.ErrorCode.DB_ERR);
+		}
+	
+		
+		//Gibt die PetitionList einer bestimmten Kategorie zurück
+				//Empfängt als Parameter CategoryID,  Sortierung, Start-Zeile und Limit
+				public static PetitionList getPetitionListByCategory(int categoryID, String order, int start, int limit) throws ESellException{
+					
+					makeConnection();
+			    	PreparedStatement preparedStatement = null;
+			    	
+			        if(conn != null)
+			        {
+			            try {
+			            	//Statement vorbereiten
+			                String sql = "SELECT * from petitions WHERE category_id = ? ORDER BY ? LIMIT ?, ?";
+			                preparedStatement = conn.prepareStatement(sql);
+			                
+			                preparedStatement.setInt(1, categoryID);
+			                preparedStatement.setString(2, order);
+			                preparedStatement.setInt(3, start);
+			                preparedStatement.setInt(4, limit);
+			                
+			                //Statement absetzen
+			                ResultSet result = preparedStatement.executeQuery();
+			                
+			                ArrayList<Petition> petitionList = new ArrayList<Petition>();
+			                
+			                //Für jeden Datensatz ein Objekt anlegen und in die Liste packen
+			                while(result.next())
+			                {
+			                	Petition petition = new Petition(result);
+			                	petitionList.add(petition);
+			                }
+			                
+			                return new PetitionList(petitionList);
+			            } catch (SQLException e) {
+			                e.printStackTrace();
+			                throw new ESellException(ESellException.ErrorCode.DB_ERR);
+			            }
+			        }
+			        else
+			        	throw new ESellException(ESellException.ErrorCode.DB_ERR);
+				}
 	
 	// Getter / Setter
 
 	public int getID() {
 		return id;
 	}
+	
+	private void setID(int id){
+		this.id = id;
+	}
 
 	public int getUserID() {
 		return userID;
-	}
-	
-	public String getUsername() {
-		return username;
 	}
 
 	public void setUserID(int applicant) {
@@ -300,10 +423,6 @@ public class Petition extends Persistence {
 		this.categoryID = categoryID;
 	}
 
-	public String getCategoryTitle() {
-		return categoryTitle;
-	}
-
 	public int getAmount() {
 		return amount;
 	}
@@ -338,5 +457,23 @@ public class Petition extends Persistence {
 
 	public enum State {
 		Searching, Finished
+	}
+	
+	public static class PetitionList{
+		
+		private ArrayList<Petition> petitionList = new ArrayList<Petition>();
+		
+		//Konstruktor
+				private PetitionList(ArrayList<Petition> petitionList)
+				{
+					this.petitionList = petitionList;
+				}
+				
+				public String getJson(){
+					Gson gson = new Gson();
+					String json = gson.toJson(this.petitionList);
+					return json; 
+				}
+		
 	}
 }
