@@ -66,3 +66,22 @@ DEFAULT CHARACTER SET = utf8;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Initiel categories
+-- -----------------------------------------------------
+
+INSERT INTO esell.categories (title) VALUES ('Books');
+INSERT INTO esell.categories (title) VALUES ('Electronics');
+INSERT INTO esell.categories (title) VALUES ('Movies');
+INSERT INTO esell.categories (title) VALUES ('Computers');
+INSERT INTO esell.categories (title) VALUES ('Home & Garden');
+INSERT INTO esell.categories (title) VALUES ('Health & Beauty');
+INSERT INTO esell.categories (title) VALUES ('Toys');
+INSERT INTO esell.categories (title) VALUES ('Clothing');
+INSERT INTO esell.categories (title) VALUES ('Shoes');
+INSERT INTO esell.categories (title) VALUES ('Jewelery');
+INSERT INTO esell.categories (title) VALUES ('Sports');
+INSERT INTO esell.categories (title) VALUES ('Outdoor');
+INSERT INTO esell.categories (title) VALUES ('Automotive');
+
