@@ -370,7 +370,9 @@ public class Petition extends Persistence {
 			            }
 			        }
 			        else
+			        {
 			        	throw new ESellException(ESellException.ErrorCode.DB_ERR);
+			        }
 				}
 	
 	// Getter / Setter

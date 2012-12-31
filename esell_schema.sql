@@ -71,6 +71,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- Initiel categories
 -- -----------------------------------------------------
 
+INSERT INTO esell.categories (title) VALUES ('All');
 INSERT INTO esell.categories (title) VALUES ('Books');
 INSERT INTO esell.categories (title) VALUES ('Electronics');
 INSERT INTO esell.categories (title) VALUES ('Movies');
