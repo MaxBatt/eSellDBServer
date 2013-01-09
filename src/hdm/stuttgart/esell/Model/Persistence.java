@@ -27,7 +27,7 @@ public abstract class Persistence {
     private static String dbPassword = "root";
 
      
-    public static void makeConnection()
+    protected static void makeConnection()
     {
         if(conn == null)
  {
